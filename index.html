@@ -24,9 +24,424 @@
 	</head>
 	<body>
 		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+      <div class="slides">
+        <section>
+          <h2>MongoDB</h2>
+          <small>Created by <a href="https://github.com/likhuta" target="_blank">Anna Likhuta</a></small>
+        </section>
+
+        <section>
+          <section>
+            <img height="50%" width="auto" src="assets/mongologo-580x358.png">
+          </section>
+          <section>
+            <h3>You'll know about:</h3>
+            <br>
+            <p>General representation</p>
+            <p>Installation</p>
+            <p>CRUD operation</p>
+            <p>Aggregation</p>
+            <p>Index</p>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h4>Starting of work</h4>
+              <p>
+                Dowland MongoDB from official website 
+                <a href="https://docs.mongodb.com/manual/administration/install-community/" target="_block">mongo.com</a>
+              </p>
+          </section>
+          <section>
+            <p>Execution commands or operators is required:</p>
+              <ul>
+                <li><a href="https://docs.mongodb.com/manual/tutorial/atlas-free-tier-setup/" target="_blank">Mongo Atlas Free Tier Cluster</a></li>
+                <li>Local MngoDB installation</li>
+              </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h4>Document</h4>
+            <img src="assets/crud-annotated-document.bakedsvg.svg">
+          </section>
+          <section>
+            <h4>Collection</h4>
+            <img src="assets/crud-annotated-collection.bakedsvg.svg">
+
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>What this BSON?</h2>
+            <p class="fragment fade-up">MongoDB stores BSON documents</p>
+            <p class="fragment fade-down">BSON is a binary representation of JSON documents</p>
+          </section>
+          <section>
+            <p>Each BSON integer and string identifiers</p>
+					<table>
+						<thead>
+							<tr>
+								<th>Type</th>
+								<th>Number</th>
+								<th>Alias</th>
+							</tr>
+						</thead>
+            <tbody>
+              <tr>
+								<td>Double</td>
+								<td>1</td>
+								<td>"double"</td>
+							</tr>
+							<tr>
+								<td>String</td>
+								<td>2</td>
+								<td>"string"</td>
+							</tr>
+							<tr>
+								<td>Object</td>
+								<td>3</td>
+								<td>"object"</td>
+							</tr>
+							<tr>
+								<td>Array</td>
+								<td>4</td>
+								<td>"array"</td>
+              </tr>
+              <tr>
+								<td>ObjectId</td>
+								<td>7</td>
+								<td>"objectId"</td>
+							</tr>
+							<tr>
+								<td>Boolean</td>
+								<td>8</td>
+								<td>"boolean"</td>
+              </tr>
+              <tr>
+								<td>...</td>
+								<td>...</td>
+								<td>...</td>
+							</tr>
+						</tbody>
+					</table>
+          </section>
+          <section>
+            <pre>
+            <code class="hljs">
+var mydoc = {
+  _id: ObjectId("5099803df3f4948bd2f98391"),
+  name: { first: "Alan", last: "Turing" },
+  birth: new Date('Jun 23, 1912'),
+  death: new Date('Jun 07, 1954'),
+  contribs: [ "Turing machine", "Turing test", "Turingery" ],
+  views : NumberLong(1250000)
+            }
+            </code> 
+            </pre>
+          </section>
+        </section>
+
+        <section>
+          <p>To select a database</p>
+          <pre>
+            <code class="hljs">
+ use myDB
+            </code> 
+            </pre>
+        </section>
+
+
+
+        <section>
+          <section>
+            <p>Restrictions on field name</p>
+            <ul>
+              <li><b>_id</b> is reserved</li>
+              <li>cannot contain <b>null</b></li>
+              <li>top-level field names cannot start with the dollar sign ($) character</li>
+            </ul>
+          </section>
+          <section>
+            <p>Maximum BSON size document is 16 Mb.</p>
+            <p>If you have more - <a href="https://docs.mongodb.com/manual/core/gridfs/index.html" target="_blank">GridFS Api</a></p></section>
+        </section>
+
+        <section>
+          <section>
+          <h5>CRUD operation</h5>
+          <ul>
+            <li>Create</li>
+            <li>Read</li>
+            <li>Update</li>
+            <li>Delete</li>
+          </ul>
+        </section>
+        <section>
+          <p> inserts a single document into a collection </p>
+          <pre>  <code class="hljs"  style="font-size: 16px;" >
+db.inventory.insertOne(
+   { item: "canvas", qty: 100, tags: ["cotton"], size: { h: 28, w: 35.5, uom: "cm" } }
+)            </code> </pre>
+         <p> insert multiple documents into a collection</p>
+         <pre>   <code class="hljs" style="font-size: 16px;"> 
+db.inventory.insertMany([
+   { item: "journal", qty: 25, tags: ["blank", "red"], size: { h: 14, w: 21, uom: "cm" } },
+   { item: "mousepad", qty: 25, tags: ["gel", "blue"], size: { h: 19, w: 22.85, uom: "cm" } }
+])            </code> </pre> 
+        </section>
+        <section>
+          <p> for query document </p>
+         <pre>   <code class="hljs" > 
+db.inventory.find( {} )
+        </code> </pre> 
+        </section>
+        <section>
+          <p> AND Conditions </p>
+          <p>The following example retrieves all documents in the inventory collection
+             where the status equals "A" and qty is less than ($lt) 30:</p>
+         <pre>   <code class="hljs" > 
+db.inventory.find( { status: "A", qty: { $lt: 30 } } )
+         </code> </pre> 
+        </section>
+        <section>
+          <p> AND as well as OR Conditions </p>
+          <p>In the following example, the compound query document selects all documents in
+             the collection where the status equals "A" and either qty is less than ($lt) 30
+              or item starts with the character p: </p>
+         <pre>   <code class="hljs" > 
+db.inventory.find( {
+     status: "A",
+     $or: [ { qty: { $lt: 30 } }, { item: /^p/ } ]
+} )         </code> </pre> 
+        </section>
+        <section>
+          <p> update at most a single document </p>
+          <pre>  <code class="hljs"  style="font-size: 20px;" >
+db.collection.updateOne()
+</code> </pre>
+         <p>update all documents</p>
+         <pre>   <code class="hljs" style="font-size: 20px;"> 
+db.collection.updateMany() </code> </pre> 
+        </section>
+        <section>
+          <p> Example update operation </p>
+         <pre>   <code class="hljs" style="font-size: 14px;" > 
+db.inventory.insertMany( [
+   { item: "canvas", qty: 100, size: { h: 28, w: 35.5, uom: "cm" }, status: "A" },
+   { item: "paper", qty: 100, size: { h: 8.5, w: 11, uom: "in" }, status: "D" },
+   { item: "sketch pad", qty: 95, size: { h: 22.85, w: 30.5, uom: "cm" }, status: "A" }
+] );
+
+db.inventory.updateOne(
+   { item: "paper" },
+   { $set: { "size.uom": "cm", status: "P" },
+     $currentDate: { lastModified: true }
+   })
+         </code> </pre> 
+        </section>
+        <section>
+          <p> deletes all documents from collection </p>
+          <pre>  <code class="hljs"  style="font-size: 20px;" >
+db.inventory.deleteMany({})
+</code> </pre>
+         <p>deletes the first document which correspond to filter</p>
+         <pre>   <code class="hljs" style="font-size: 20px;"> 
+db.inventory.deleteOne( { status: "D" } ) </code> </pre> 
+        </section>
+        </section>
+
+        <section>
+          <section>
+            <h5>Bulk write operation</h5>
+          <span>Supports the following write operation:</span>
+          <br>
+          <ul>
+            <li>inserOne</li>
+            <li>updateOne</li>
+            <li>updateMany</li>
+            <li>replaceOne</li>
+            <li>deleteOne</li>
+            <li>deleteMany</li>
+          </ul>
+          </section>
+          <section>
+          <p> Example with bulk operation </p>
+         <pre>   <code class="hljs" style="font-size: 16px;" > 
+{ "_id" : 1, "char" : "Brisbane", "class" : "monk", "lvl" : 4 },
+{ "_id" : 2, "char" : "Eldon", "class" : "alchemist", "lvl" : 3 },
+
+db.characters.bulkWrite([
+  { insertOne: { "document": { "_id": 4, "char": "Taeln", "class": "fighter", "lvl": 3 } } },
+  { updateOne : {
+      "filter" : { "char" : "Eldon" },
+      "update" : { $set : { "status" : "Critical Injury" } }
+  } },
+  { deleteOne : { "filter" : { "char" : "Brisbane"} } },
+]);
+         </code> </pre> 
+          </section>
+        </section>
+
+        <section>
+          <section>
+          <span>for comparison operators</span>
+          <table>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+            <tbody>
+              <tr>
+								<td>$eq</td>
+								<td>equal to a specified value</td>
+							</tr>
+							<tr>
+								<td>$gt</td>
+								<td>greater than a specified value</td>
+							</tr>
+							<tr>
+								<td>$gte</td>
+								<td>greater than or equal to a specified value</td>
+							</tr>
+							<tr>
+								<td>$in</td>
+								<td>any of the values specified in an array</td>
+              </tr>
+              <tr>
+								<td>$lt</td>
+								<td> less than a specified value</td>
+							</tr>
+							<tr>
+								<td>$lte</td>
+								<td> less than or equal to a specified value</td>
+              </tr>
+              <tr>
+								<td>$ne</td>
+								<td>not equal to a specified value</td>
+              </tr>
+              
+						</tbody>
+					</table>
+        </section>
+        <section >
+          <span>logical operators</span>
+          <br>
+          <table style="font-size: 26px; ">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+            <tbody>
+              <tr>
+								<td>$and</td>
+                <td>Joins query clauses with a logical 
+                  AND returns all documents that match the conditions </td>
+							</tr>
+							<tr>
+								<td>$not</td>
+                <td>Inverts the effect of a query expression
+                   and returns documents that do not match </td>
+							</tr>
+							<tr>
+								<td>$nor</td>
+                <td>Joins query clauses with a logical NOR 
+                  returns all documents that fail to match</td>
+							</tr>
+							<tr>
+								<td>$or</td>
+                <td>	Joins query clauses with a logical OR returns 
+                  all documents that match the conditions </td>
+              </tr>
+						</tbody>
+					</table>
+        </section>
+        <section>
+          <span>update operators for fields</span>
+          <table style="font-size: 26px; ">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+            <tbody>
+              <tr>
+								<td>$currentDate</td>
+								<td>Sets the value of a field to current date, either as a Date or a Timestamp</td>
+							</tr>
+							<tr>
+								<td>$in</td>
+								<td>Increments the value of the field by the specified amount</td>
+							</tr>
+							<tr>
+								<td>$min</td>
+								<td>Updates specified value if the specified value is less than the existing field value</td>
+							</tr>
+							<tr>
+								<td>$max</td>
+								<td>Updates the field if the specified value is greater than the existing field value</td>
+              </tr>
+              <tr>
+								<td>$rename</td>
+								<td> 	Renames a field</td>
+							</tr>
+							<tr>
+								<td>$set</td>
+								<td> Sets the value of a field in a document</td>
+              </tr>
+              <tr>
+								<td>$unset</td>
+								<td>Removes the specified field from a document</td>
+              </tr>
+              
+						</tbody>
+					</table>
+        </section>
+        </section>
+
+        <section  style="font-size: 32px;">
+          <p>Aggregation operations return computed results</p>
+          <span>Each document in the zipcodes collection has the following form:</span>
+          <pre>  <code class="hljs"  style="font-size: 16px;" >
+{
+  "_id": "10280",
+  "city": "NEW YORK",
+  "state": "NY",
+  "pop": 5574,
+}</code> </pre>
+         <span>Result of this query were all states with total population greater than 10 million:</span>
+         <pre>   <code class="hljs" style="font-size: 20px;"> 
+db.zipcodes.aggregate( [
+   { $group: { _id: "$state", totalPop: { $sum: "$pop" } } },
+   { $match: { totalPop: { $gte: 10*1000*1000 } } }
+] )
+         </code> </pre> 
+        </section>
+        <section>
+          <section>
+            <p>Indexes</p>
+          <img src="assets/index-for-sort.bakedsvg.svg" >
+          </section>
+          <section>
+            <span>To create an index</span>
+          <pre>  <code class="hljs" style="font-size: 20px;"  >
+db.collection.createIndex(&#60;key and index type specification&#62;, &#60;options&#62;);
+</code> </pre>
+          </section>
+        </section>
+
+        <section>
+          <h3>Thank you  for attention</h3>  
+        </section>
+
 			</div>
 		</div>
 
